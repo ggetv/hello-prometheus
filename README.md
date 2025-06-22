@@ -1,8 +1,9 @@
 # Quick Start Guide with Prometheus and Grafana
+This guide is a quick start guide to get you started with Prometheus and Grafana. It is based on [this guide](https://signoz.io/guides/how-to-install-prometheus-and-grafana-on-docker/) from [SigNoz Blog](signoz.io). SigNoz is another open source APM and observability platform worth trying.
+
+Once you have set up Prometheus and Grafana, you can start the demo applications (see `apps` directory) in different programming languages to send metrics.
 
 ## Prometheus and Grafana Setup
-These steps are from [this guide](https://signoz.io/guides/how-to-install-prometheus-and-grafana-on-docker/) from [SigNoz Blog](signoz.io). SigNoz is another open source APM and observability platform worth trying.
-
    1. Create a Docker network: `docker network create prometheus`
    2. Create Prometheus config file: `prometheus.yml`
    3. Create a Docker Compose file: `docker-compose.yml`
@@ -21,12 +22,27 @@ These steps are from [this guide](https://signoz.io/guides/how-to-install-promet
    12. Update `prometheus.yml` to add cAdvisor. Note: since we are running cAdvisor and Prometheus in the same Docker network, use `cadvisor:8080` as cAdvisor server URL for the connection.
    13. Restart Promethus and Grafana: `docker compose restart`, you can see cAdvisor metrics at `http://localhost:8080/metrics`, there is also a Web UI at `http://localhost:8080`
 
-Summary:
+## Demo Applications
+Integration with applications is done through client libraries, e.g. [Go](https://github.com/prometheus/client_golang), [Python](https://github.com/prometheus/client_python), [Java](https://github.com/prometheus/client_java), [Node.js](https://github.com/prometheus/client_node), etc. You can use the client library to expose metrics in your application.
+
+You can find demo applications in the `apps` directory. Follow the instructions in the `README.md` file in each directory to run the demo applications.
+
+### Java Demo Applications
+There was an old Java client library `Simpleclient` and then it got rewritten to `client_java`. We provide two demo applications to show how to use both libraries.
+   * `java-old`: a demo Java application using the old Prometheus Java client library. The application will be running and exposing metrics on `http://localhost:8081/metrics`.
+   * `java`: a demo Java application using the Prometheus Java client library. The application exposes various types of metrics (Counter, Gauge, Histogram, Summary) and JVM metrics on `http://localhost:8082/metrics`.
+
+## Summary
    * Prometheus UI: http://localhost:9090
-   * Metrics exposed through Prometheus: http://localhost:9090/metrics
+   * Prometheus metrics: http://localhost:9090/metrics
    * cAdvisor UI: http://localhost:8080
    * cAdvisor metrics: http://localhost:8080/metrics
    * Grafana UI: http://localhost:3000
+   * Demo app `java-old`: http://localhost:8081
+   * Demo app `java-old` metrics: http://localhost:8081/metrics
+   * Demo app `java`: http://localhost:8082
+   * Demo app `java` metrics: http://localhost:8082/metrics
+
 
 ## Prometheus
 Prometheus is a time series database, it stores metrics in the form of time series. It supports dimensions called labels, which are key-value pairs that can be used to filter and aggregate metrics. 
@@ -99,10 +115,4 @@ Comparing `Histogram` and `Summary`, [see this](https://prometheus.io/docs/pract
    * for histogram, quatiles are calculated on the server side; for summary, client needs to run streaming quantile algorithm to calculate quantiles.
    * check out the table on [comparison documentation](https://prometheus.io/docs/practices/histograms/) for more details.
 
-## Integration with Applications
-Integration with applications is done through client libraries, e.g. [Go](https://github.com/prometheus/client_golang), [Python](https://github.com/prometheus/client_python), [Java](https://github.com/prometheus/client_java), [Node.js](https://github.com/prometheus/client_node), etc. You can use the client library to expose metrics in your application.
-
-We provide several quick demo applications in the `apps` directory:
-   * `java-old`: a demo Java application using the old Prometheus Java client library. The application will be running and exposing metrics on `http://localhost:8081/metrics`.
-   * `java`: a demo Java application using the Prometheus Java client library. The application exposes various types of metrics (Counter, Gauge, Histogram, Summary) and JVM metrics on `http://localhost:8082/metrics`.
 
